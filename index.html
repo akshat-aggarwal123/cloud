@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Login | Hide.Finance$</title>
+    <link rel="stylesheet" href="./home.css">
+    <link rel="icon" href="./assets/img/logotipo4.svg">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <header>
+        <div>
+            <img src="./assets/img/acc.jpeg" width="300" height="200" alt="logo hide finance">
+        </div>
+    </header>
+
+    <main class="container">
+        <section id='login'>
+            <h2 class="sr-only">Login</h2>
+            <div class="form-container">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                    <p>Don't have an account? <a href="#" onclick="toggleForm('register')">Register</a></p>
+                </form>
+            </div>
+        </section>
+        
+        <section id='register' style="display:none;">
+            <h2 class="sr-only">Register</h2>
+            <div class="form-container">
+                <h2>Register</h2>
+                <form id="register-form">
+                    <div class="input-group">
+                        <label for="new-username">Username:</label>
+                        <input type="text" id="new-username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="new-email">Email:</label>
+                        <input type="email" id="new-email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="new-password">Password:</label>
+                        <input type="password" id="new-password" required>
+                    </div>
+                    <button type="submit">Register</button>
+                    <p>Already have an account? <a href="#" onclick="toggleForm('login')">Login</a></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p> &copy;2024 | Account Management | All Rights Reserved.</p>
+    </footer>
+
+    <script src="./scripts.js"></script>
+    <script>
+        function toggleForm(formId) {
+            document.getElementById('login').style.display = (formId === 'login') ? 'block' : 'none';
+            document.getElementById('register').style.display = (formId === 'register') ? 'block' : 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+
+            loginForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                // Perform login logic here
+                // For demonstration purposes, I'll just redirect to the home page
+                window.location.href = 'home.html';
+            });
+
+            registerForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const newUsername = document.getElementById('new-username').value;
+                const newEmail = document.getElementById('new-email').value;
+                const newPassword = document.getElementById('new-password').value;
+
+                // Perform registration logic here
+                // For demonstration purposes, I'll just simulate a successful registration
+                // and then log in with the newly registered credentials
+                fetch('your_backend_registration_endpoint', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: newUsername,
+                        email: newEmail,
+                        password: newPassword
+                    }),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Registration failed');
+                })
+                .then(data => {
+                    // Registration successful, now perform login with the new credentials
+                    return fetch('your_backend_login_endpoint', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            username: newUsername,
+                            password: newPassword
+                        }),
+                    });
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Login failed');
+                })
+                .then(data => {
+                    // Login successful, redirect to the home page
+                    window.location.href = 'home.html';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
